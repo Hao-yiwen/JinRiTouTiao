@@ -23,14 +23,12 @@ import com.github.anzewei.parallaxbacklayout.widget.ParallaxBackLayout;
 import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import io.github.haoyiwen.jinritoutiao.ui.MainActivity;
+import io.github.haoyiwen.jinritoutiao.ui.activities.MainActivity;
 import io.github.haoyiwen.jinritoutiao.listener.PermissionListener;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 
@@ -98,8 +96,7 @@ public abstract class BaseActivity<T extends BasePresenter, VB extends ViewBindi
     }
 
     protected VB initViewBinding(){
-        Type superclass = getClass().getGenericSuperclass();
-        Class<VB> bindingClass = (Class<VB>) ((ParameterizedType) superclass).getActualTypeArguments()[1];
+        Class<VB> bindingClass = getBindingClass();
         try {
             Method inflateMethod = bindingClass.getMethod("inflate", LayoutInflater.class);
             return (VB) inflateMethod.invoke(null, getLayoutInflater());
@@ -107,6 +104,8 @@ public abstract class BaseActivity<T extends BasePresenter, VB extends ViewBindi
             throw new RuntimeException("ViewBinding inflate failed!", e);
         }
     }
+
+    protected abstract Class<VB> getBindingClass();
 
     public int getEdgeDirection() {
         return ParallaxBack.Edge.LEFT.getValue();
