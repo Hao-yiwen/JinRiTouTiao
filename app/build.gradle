@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'io.github.haoyiwen.jinritoutiao'
-    compileSdk 34
+    compileSdk compile_sdk_version
 
     defaultConfig {
         applicationId "io.github.haoyiwen.jinritoutiao"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk_version
+        targetSdk target_sdk_version
+        versionCode build_version
+        versionName display_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,14 +26,63 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets {
+        //目录结构设置
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java', '.apt_generated']
+            aidl.srcDirs = ['src/main/aidl', '.apt_generated']
+            assets.srcDirs = ['src/main/assets']
+            res.srcDirs =
+                    [
+                            'src/main/res/common',
+                            'src/main/res/home',
+                            'src/main/res/video',
+                            'src/main/res/micro',
+                            'src/main/res/mine'
+                    ]//res 目录的拆分
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // uikit
+    implementation(project(path: ':uikit'))
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation "com.squareup.retrofit2:converter-scalars:2.11.0"
+    //okhhttp
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    //rxjava
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    //eventbus
+    implementation("org.greenrobot:eventbus:3.3.1")
+    // livedata viewmodel
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    // fastjson
+    implementation 'com.alibaba:fastjson:2.0.51'
+    // videoplayer
+    implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
+    // logger
+    implementation 'com.orhanobut:logger:2.2.0'
+    // 轻量sqlite
+    implementation 'org.litepal.guolindev:core:3.2.3'
+    // 返回视察效果
+    implementation 'com.github.anzewei:parallaxbacklayout:1.1.9'
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
