@@ -11,11 +11,12 @@ import androidx.core.view.WindowInsetsCompat;
 import io.github.haoyiwen.jinritoutiao.R;
 import io.github.haoyiwen.jinritoutiao.base.BaseActivity;
 import io.github.haoyiwen.jinritoutiao.base.BasePresenter;
+import io.github.haoyiwen.jinritoutiao.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity {
     @Override
     protected Class getBindingClass() {
-        return null;
+        return ActivityMainBinding.class;
     }
 
     @Override
