@@ -21,11 +21,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
     }
 
     @Override
     protected BasePresenter createPresenter() {
         return null;
+    }
+
+    @Override
+    public boolean enableSlideClose() {
+        return false;
     }
 }
