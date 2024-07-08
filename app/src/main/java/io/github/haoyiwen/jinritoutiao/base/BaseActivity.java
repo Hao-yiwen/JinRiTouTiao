@@ -115,7 +115,9 @@ public abstract class BaseActivity<T extends BasePresenter, VB extends ViewBindi
         return LAYOUT_COVER;
     }
 
-    public abstract void initView();
+    public void initView() {
+
+    }
 
     public void initData() {
     }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BottomBarItem">
+        <attr name="iconNormal" format="reference" />
+        <attr name="iconSelected" format="reference" />
+        <attr name="itemText" format="string" />
+        <attr name="itemTextSize" format="dimension" />
+        <attr name="textColorNormal" format="color" />
+        <attr name="textColorSelected" format="color" />
+        <attr name="itemMarginTop" format="dimension" />
+        <attr name="openTouchBg" format="boolean" />
+        <attr name="touchDrawable" format="reference" />
+    </declare-styleable>
+    <string name="app_name">library</string>
+</resources>
