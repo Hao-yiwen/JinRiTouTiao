@@ -38,6 +38,9 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             binding = initViewBinding(inflater, container);
+            if (binding == null) {
+                throw new IllegalStateException("Binding cannot be null");
+            }
             rootView = binding.getRoot();
 
             mStateView = StateView.inject(getStateViewRoot());

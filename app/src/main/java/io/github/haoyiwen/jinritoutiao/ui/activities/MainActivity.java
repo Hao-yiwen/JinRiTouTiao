@@ -54,6 +54,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void initView() {
+        mVpContent = ((ActivityMainBinding) mBinding).vpContent;
+        mBottomBarLayout = ((ActivityMainBinding) mBinding).bottomBar;
+    }
+
+    @Override
     protected BasePresenter createPresenter() {
         return null;
     }
@@ -65,6 +71,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initListener() {
-
+        mTabAdapter = new MainTabAdapter(mFragments, getSupportFragmentManager());
+        mVpContent.setAdapter(mTabAdapter);
+        mVpContent.setOffscreenPageLimit(mFragments.size());
+        try {
+            mBottomBarLayout.setViewPager(mVpContent);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
