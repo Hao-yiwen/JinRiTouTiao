@@ -27,6 +27,7 @@ android {
 
 dependencies {
     api('com.github.nukc.stateview:library:1.5.4')
+    api('me.weyye.ColorTrackTabLayout:library:1.0.1')
 
     implementation libs.appcompat
     implementation libs.material

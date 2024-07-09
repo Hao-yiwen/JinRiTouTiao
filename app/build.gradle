@@ -82,6 +82,9 @@ dependencies {
     implementation 'org.litepal.guolindev:core:3.2.3'
     // 返回视察效果
     implementation 'com.github.anzewei:parallaxbacklayout:1.1.9'
+    // 多类型适配器
+    implementation 'com.github.chaychan:MultipleItemRvAdapter:1.0.4'
+
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
