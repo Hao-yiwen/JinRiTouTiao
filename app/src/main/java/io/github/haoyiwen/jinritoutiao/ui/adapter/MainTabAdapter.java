@@ -14,7 +14,7 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
     private List<BaseFragment> mFragments = new ArrayList<>();
 
     public MainTabAdapter(List<BaseFragment> fragmentList, FragmentManager fm) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         if (fragmentList != null) {
             mFragments = fragmentList;
         }
