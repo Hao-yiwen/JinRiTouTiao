@@ -1,6 +1,7 @@
 package io.github.haoyiwen.jinritoutiao.ui.activities;
 
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,9 @@ public class MainActivity extends BaseActivity {
             R.color.color_BDBDBD,
     };
 
+    /**
+     * @description: 20240711犯了个错，只要初始化fragment，必须要绑定binding。。。负责就是会报错。。这个问题让我找了一晚上原因。但是也阴差阳错研究了一下viewpager
+     */
     @Override
     public void initData() {
         mFragments = new ArrayList<>();
@@ -73,11 +77,11 @@ public class MainActivity extends BaseActivity {
     public void initListener() {
         mTabAdapter = new MainTabAdapter(mFragments, getSupportFragmentManager());
         mVpContent.setAdapter(mTabAdapter);
-        mVpContent.setOffscreenPageLimit(mFragments.size());
-        try {
-            mBottomBarLayout.setViewPager(mVpContent);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+//        mVpContent.setOffscreenPageLimit(mFragments.size());
+//        try {
+//            mBottomBarLayout.setViewPager(mVpContent);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

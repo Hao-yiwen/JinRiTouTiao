@@ -7,11 +7,12 @@ import androidx.viewbinding.ViewBinding;
 
 import io.github.haoyiwen.jinritoutiao.base.BaseFragment;
 import io.github.haoyiwen.jinritoutiao.base.BasePresenter;
+import io.github.haoyiwen.jinritoutiao.databinding.FragmentMicroBinding;
 
 public class MicroFragment extends BaseFragment {
     @Override
     protected ViewBinding initViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return null;
+        return FragmentMicroBinding.inflate(inflater, container, false);
     }
 
     @Override

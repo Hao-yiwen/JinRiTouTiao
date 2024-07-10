@@ -7,11 +7,12 @@ import androidx.viewbinding.ViewBinding;
 
 import io.github.haoyiwen.jinritoutiao.base.BaseFragment;
 import io.github.haoyiwen.jinritoutiao.base.BasePresenter;
+import io.github.haoyiwen.jinritoutiao.databinding.FragmentVideoBinding;
 
 public class VideoFragment extends BaseFragment {
     @Override
     protected ViewBinding initViewBinding(LayoutInflater inflater, ViewGroup container) {
-        return null;
+        return FragmentVideoBinding.inflate(inflater, container, false);
     }
 
     @Override
