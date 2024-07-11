@@ -22,8 +22,10 @@ import io.github.haoyiwen.jinritoutiao.ui.fragment.HomeFragment;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.MicroFragment;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.MineFragment;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.VideoFragment;
+import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 import io.github.haoyiwen.uikit.NoScrollViewPager;
 import io.github.haoyiwen.uikit.bottombar.BottomBarLayout;
+import io.github.haoyiwen.uikit.statusbar.Eyes;
 
 public class MainActivity extends BaseActivity {
     @Override
@@ -77,11 +79,25 @@ public class MainActivity extends BaseActivity {
     public void initListener() {
         mTabAdapter = new MainTabAdapter(mFragments, getSupportFragmentManager());
         mVpContent.setAdapter(mTabAdapter);
-//        mVpContent.setOffscreenPageLimit(mFragments.size());
-//        try {
-//            mBottomBarLayout.setViewPager(mVpContent);
-//        } catch (IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
+        mVpContent.setOffscreenPageLimit(mFragments.size());
+        try {
+            mBottomBarLayout.setViewPager(mVpContent);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        mBottomBarLayout.setOnItemSelectedListener((v, i) -> {
+            setStatusBarColor(i);//设置状态栏颜色
+        });
     }
+
+    private void setStatusBarColor(int position) {
+        if(position == 3){
+            Eyes.translucentStatusBar(MainActivity.this, true);
+        } else {
+            Eyes.setStatusBarColor(MainActivity.this, UIUtils.getColor(mStatusColors[position]));
+        }
+    }
+
+
 }
