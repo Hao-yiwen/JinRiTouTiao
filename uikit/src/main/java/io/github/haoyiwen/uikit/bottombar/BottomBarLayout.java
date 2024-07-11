@@ -142,6 +142,10 @@ public class BottomBarLayout extends LinearLayout implements ViewPager.OnPageCha
         }
     }
 
+    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
+        this.onItemSelectedListener = onItemSelectedListener;
+    }
+
     public interface OnItemSelectedListener {
         void onItemSelected(BottomBarItem var1, int var2);
     }
