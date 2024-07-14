@@ -60,10 +60,10 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
         return rootView;
     }
 
-    private void initListener() {
+    public void initListener() {
     }
 
-    private void initData() {
+    public void initData() {
     }
 
     @Override
