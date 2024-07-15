@@ -1,13 +1,37 @@
 package io.github.haoyiwen.uikit;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class TipView extends LinearLayout {
+import io.github.haoyiwen.uikit.utils.UIUtils;
 
+public class TipView extends LinearLayout {
+    private Context mContext;
+    private int mBackGroundColor;
+    private int mTextColor;
+    private String mText;
+    private int mTextSize;
+    private TextView mTvTip;
+
+    //显示所有停留的事件
+    private int mStayTime = 2000;
+    private boolean isShowing;
+    private Handler mHandler = new Handler();
 
     public TipView(Context context) {
         this(context, null);
@@ -19,5 +43,106 @@ public class TipView extends LinearLayout {
 
     public TipView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
+
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TipView);
+        mBackGroundColor = ta.getColor(R.styleable.TipView_tipBackgroundColor, Color.parseColor("#ffffff"));
+        mTextColor = ta.getColor(R.styleable.TipView_tipTextColor, Color.parseColor("#666666"));
+        mText = ta.getString(R.styleable.TipView_tipText);
+        mTextSize = ta.getDimensionPixelSize(R.styleable.TipView_tipTextSize, UIUtils.sp2px(context, 12));
+        ta.recycle();
+
+        init();
+    }
+
+    private void init() {
+        setGravity(Gravity.CENTER);
+        setBackgroundColor(mBackGroundColor);
+
+        mTvTip = new TextView(mContext);
+        mTvTip.setGravity(Gravity.CENTER);
+        mTvTip.getPaint().setTextSize(mTextSize);
+        mTvTip.setTextColor(mTextColor);
+        mTvTip.setText(mText);
+
+        addView(mTvTip);
+    }
+
+    public void show(String content) {
+        if (TextUtils.isEmpty(content)) {
+            show();
+            return;
+        }
+        mTvTip.setText(content);
+        show();
+    }
+
+    public void show() {
+        if (isShowing) {
+            return;
+        }
+
+        isShowing = true;
+
+        setVisibility(VISIBLE);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mTvTip, "scaleX", 0, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mTvTip, "scaleY", 0, 1f);
+
+        animatorSet.setDuration(5000);
+        animatorSet.play(scaleX).with(scaleY);
+        animatorSet.start();
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(@NonNull Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animation) {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        hide();
+                    }
+                }, mStayTime);
+            }
+
+            @Override
+            public void onAnimationCancel(@NonNull Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull Animator animation) {
+            }
+        });
+    }
+
+    private void hide() {
+        TranslateAnimation hideAnime = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+
+        hideAnime.setDuration(3000);
+        startAnimation(hideAnime);
+
+        hideAnime.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                setVisibility(GONE);
+                isShowing = false;
+                mTvTip.setText(mText);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }
