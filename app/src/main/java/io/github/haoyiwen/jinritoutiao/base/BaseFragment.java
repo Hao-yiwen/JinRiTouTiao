@@ -72,7 +72,7 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
         mActivity = (Activity) context;
     }
 
-    private void initView(View rootView) {
+    protected void initView(View rootView) {
     }
 
     protected View getStateViewRoot() {
