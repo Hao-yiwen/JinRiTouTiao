@@ -3,6 +3,7 @@ package io.github.haoyiwen.jinritoutiao.ui.fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -24,6 +25,7 @@ import io.github.haoyiwen.jinritoutiao.constants.Constant;
 import io.github.haoyiwen.jinritoutiao.databinding.FragmentHomeBinding;
 import io.github.haoyiwen.jinritoutiao.listener.OnChannelListener;
 import io.github.haoyiwen.jinritoutiao.model.entity.Channel;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.ChannelPagerAdapter;
 import io.github.haoyiwen.jinritoutiao.utils.PreUtils;
 import me.weyye.library.colortrackview.ColorTrackTabLayout;
 
@@ -43,7 +45,7 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
 
     private Gson mGson = new Gson();
 
-//    private ChannelPagerAdapter mChannelPagerAdapter;
+    private ChannelPagerAdapter mChannelPagerAdapter;
 
     private String[] mChannelCodes;
 
@@ -58,13 +60,20 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
         initChannelFragments();
     }
 
+    @Override
+    protected void initView(View rootView) {
+        mVpContent = binding.vpContent;
+        ivAddChannel = binding.ivOperation;
+        mTabChnanel = binding.tabChannel;
+    }
+
     /**
      * 初始化已选频道的fragment的集合
      */
     private void initChannelFragments() {
         Logger.d("initChannelFragments");
         mChannelCodes = getResources().getStringArray(R.array.channel_code);
-        for(Channel channel: mSelectedChannels){
+        for (Channel channel : mSelectedChannels) {
             NewsListFragment newsListFragment = new NewsListFragment();
             Bundle bundle = new Bundle();
             bundle.putString(Constant.CHANNEL_CODE, channel.channelCode);
@@ -91,7 +100,7 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
             selectedChannelJson = mGson.toJson(mSelectedChannels);
             Logger.d("selectedChannelJson:" + selectedChannelJson);
             PreUtils.putString(Constant.SELECTED_CHANNEL_JSON, selectedChannelJson);
-        }else {
+        } else {
             List<Channel> selectedChannel = mGson.fromJson(selectedChannelJson, new TypeToken<List<Channel>>() {
             }.getType());
             List<Channel> unselectedChannel = mGson.fromJson(unselectChannelJson, new TypeToken<List<Channel>>() {
@@ -103,7 +112,12 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
 
     @Override
     public void initListener() {
+        mChannelPagerAdapter = new ChannelPagerAdapter(mChannelFragments, mSelectedChannels, getChildFragmentManager());
+        mVpContent.setAdapter(mChannelPagerAdapter);
+        mVpContent.setOffscreenPageLimit(mSelectedChannels.size());
 
+        mTabChnanel.setupWithViewPager(mVpContent);
+        mTabChnanel.setSelectedTabIndicatorHeight(0);
     }
 
     @Override
