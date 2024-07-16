@@ -2,7 +2,7 @@ package io.github.haoyiwen.jinritoutiao.model.response;
 
 import java.util.List;
 
-import io.github.haoyiwen.jinritoutiao.model.entity.NewData;
+import io.github.haoyiwen.jinritoutiao.model.entity.NewsData;
 import io.github.haoyiwen.jinritoutiao.model.entity.TipEntity;
 
 public class NewsResponse {
@@ -39,7 +39,7 @@ public class NewsResponse {
 
     public boolean has_more_to_refresh;
 
-    public List<NewData> data;
+    public List<NewsData> data;
 
     public TipEntity tips;
 }

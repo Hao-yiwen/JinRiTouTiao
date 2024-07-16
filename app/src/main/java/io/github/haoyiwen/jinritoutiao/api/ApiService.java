@@ -1,13 +1,12 @@
 package io.github.haoyiwen.jinritoutiao.api;
 
-import android.database.Observable;
-
 import io.github.haoyiwen.jinritoutiao.model.entity.VideoModel;
 import io.github.haoyiwen.jinritoutiao.model.response.CommentResponse;
 import io.github.haoyiwen.jinritoutiao.model.response.NewDetail;
 import io.github.haoyiwen.jinritoutiao.model.response.NewsResponse;
 import io.github.haoyiwen.jinritoutiao.model.response.ResultRespose;
 import io.github.haoyiwen.jinritoutiao.model.response.VideoPathResponse;
+import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
