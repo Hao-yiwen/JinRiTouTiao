@@ -88,8 +88,6 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
 
     protected abstract T createPresenter();
 
-    protected abstract int provideContentViewId();
-
     protected abstract void loadData();
 
     @Override

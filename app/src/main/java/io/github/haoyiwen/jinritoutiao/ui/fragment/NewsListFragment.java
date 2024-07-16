@@ -1,6 +1,7 @@
 package io.github.haoyiwen.jinritoutiao.ui.fragment;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
@@ -33,7 +34,7 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
 
     FrameLayout mFlContent;
 
-    PowerfulRecyclerView mRvNewsList;
+    PowerfulRecyclerView mRvNews;
 
     private String mChnnelCode;
 
@@ -62,13 +63,22 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
     }
 
     @Override
+    protected void initView(View rootView) {
+        // 绑定binding
+        mTipView = binding.tipView;
+        mRefreshLayout = binding.refreshLayout;
+        mFlContent = binding.flContent;
+        mRvNews = binding.rvNews;
+    }
+
+    @Override
     protected NewListPresenter createPresenter() {
         return new NewListPresenter(this);
     }
 
     @Override
-    protected int provideContentViewId() {
-        return 0;
+    protected View getStateViewRoot() {
+        return mFlContent;
     }
 
     @Override
