@@ -125,11 +125,6 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
         return null;
     }
 
-    @Override
-    protected int provideContentViewId() {
-        return R.layout.fragment_home;
-    }
-
 
     @Override
     protected void loadData() {

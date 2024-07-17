@@ -21,11 +21,6 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
-    protected int provideContentViewId() {
-        return 0;
-    }
-
-    @Override
     protected void loadData() {
 
     }

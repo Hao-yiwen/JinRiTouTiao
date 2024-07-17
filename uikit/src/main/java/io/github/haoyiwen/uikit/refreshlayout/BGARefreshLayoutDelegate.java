@@ -9,4 +9,8 @@ public interface BGARefreshLayoutDelegate {
      */
 
     void onRefreshScaleChanged(float scale, int moveYdistance);
+
+    void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout bgaRefreshLayout);
+
+    boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout bgaRefreshLayout);
 }
