@@ -25,7 +25,7 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
 
     protected StateView mStateView;
 
-    private Activity mActivity;
+    protected Activity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
         if (rootView == null) {
             binding = initViewBinding(inflater, container);
             rootView = binding.getRoot();
+            initBinding();
 
             mStateView = StateView.inject(getStateViewRoot());
 
@@ -58,6 +59,9 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
             }
         }
         return rootView;
+    }
+
+    public void initBinding() {
     }
 
     public void initListener() {
