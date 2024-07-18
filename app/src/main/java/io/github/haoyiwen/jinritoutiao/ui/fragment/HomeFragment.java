@@ -55,16 +55,16 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
     }
 
     @Override
-    public void initData() {
-        initChannelData();
-        initChannelFragments();
-    }
-
-    @Override
-    protected void initView(View rootView) {
+    public void initBinding() {
         mVpContent = binding.vpContent;
         ivAddChannel = binding.ivOperation;
         mTabChnanel = binding.tabChannel;
+    }
+
+    @Override
+    public void initData() {
+        initChannelData();
+        initChannelFragments();
     }
 
     /**

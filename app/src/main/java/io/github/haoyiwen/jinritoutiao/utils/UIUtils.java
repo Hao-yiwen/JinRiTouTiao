@@ -34,4 +34,12 @@ public class UIUtils {
     public static Handler getMainThreadHandler() {
         return TouTiaoApp.getmHandler();
     }
+
+    public static String getString(int resId) {
+        return getResource().getString(resId);
+    }
+
+    public static String[] getStringArr(int channelCode) {
+        return getResource().getStringArray(channelCode);
+    }
 }
