@@ -31,6 +31,15 @@ public class UIUtils {
         getMainThreadHandler().postDelayed(task, delayMillis);
     }
 
+    public static void postTaskDelay(Runnable task) {
+        int currentThreadId = android.os.Process.myTid();
+        if (currentThreadId == TouTiaoApp.getmMainThreadId()) {
+            task.run();
+        } else {
+            getMainThreadHandler().post(task);
+        }
+    }
+
     public static Handler getMainThreadHandler() {
         return TouTiaoApp.getmHandler();
     }

@@ -26,6 +26,7 @@ import io.github.haoyiwen.jinritoutiao.presenter.NewListPresenter;
 import io.github.haoyiwen.jinritoutiao.presenter.view.INewsListView;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.NewsListAdapter;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.VideoListAdapter;
+import io.github.haoyiwen.jinritoutiao.utils.NewsRecordHelper;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 import io.github.haoyiwen.uikit.TipView;
 import io.github.haoyiwen.uikit.powerfulrecyclerview.PowerfulRecyclerView;
@@ -123,15 +124,52 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
         } else {
             mNewsAdapter = new NewsListAdapter(mChnnelCode, mNewsList);
         }
+        mRvNews.setAdapter(mNewsAdapter);
+
+        mNewsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+
+            }
+        });
+
+        mNewsAdapter.setEnableLoadMore(true);
+        mNewsAdapter.setOnLoadMoreListener(this, mRvNews);
     }
 
     @Override
     protected void loadData() {
+        mStateView.showLoading();
 
+        mNewRecord = NewsRecordHelper.getLastNewsRecord(mChnnelCode);
+
+        if(mNewRecord == null){
+            mNewRecord = new NewRecord();
+            mPresenter.getNewsList(mChnnelCode);
+            return;
+        }
+
+        List<News> newsList = NewsRecordHelper.convertToNewsList(mNewRecord.getJson());
+        mNewsList.addAll(newsList);
+        mNewsAdapter.notifyDataSetChanged();
+
+        mStateView.showContent();
+        if(mNewRecord.getTime() - System.currentTimeMillis() == 10 * 60 * 100){
+            mRefreshLayout.beginRefreshing();
+        }
     }
 
     @Override
     public void onGetNewsListSuccess(List<News> newsList, String tipInfo) {
+        mRefreshLayout.endRefreshing();
+        if(isHomeTabRefresh){
+            postRefreshCompletedEvent();
+        }
+
+
+    }
+
+    private void postRefreshCompletedEvent() {
 
     }
 

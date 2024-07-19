@@ -35,4 +35,16 @@ public class GlideUtils {
                 .apply(options)
                 .into(iv);
     }
+
+    public static void loadRound(Context context, String url, ImageView iv) {
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.mipmap.ic_circle_default)
+                .centerCrop()
+                .circleCrop();
+
+        Glide.with(context)
+                .load(url)
+                .apply(options)
+                .into(iv);
+    }
 }
