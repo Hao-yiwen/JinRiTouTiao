@@ -24,6 +24,7 @@ import io.github.haoyiwen.jinritoutiao.model.entity.NewRecord;
 import io.github.haoyiwen.jinritoutiao.model.entity.News;
 import io.github.haoyiwen.jinritoutiao.presenter.NewListPresenter;
 import io.github.haoyiwen.jinritoutiao.presenter.view.INewsListView;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.NewsListAdapter;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.VideoListAdapter;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 import io.github.haoyiwen.uikit.TipView;
@@ -119,6 +120,8 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
     public void initListener() {
         if(isVideoList){
             mNewsAdapter = new VideoListAdapter(mNewsList);
+        } else {
+            mNewsAdapter = new NewsListAdapter(mChnnelCode, mNewsList);
         }
     }
 
