@@ -25,7 +25,7 @@ import io.github.haoyiwen.jinritoutiao.utils.VideoPathDecoder;
 
 public class VideoListAdapter extends BaseQuickAdapter<News, BaseViewHolder> {
     public VideoListAdapter(List<News> mNewsList) {
-        super(R.layout.item_video_list);
+        super(R.layout.item_video_list, mNewsList);
     }
 
     @Override
