@@ -7,13 +7,14 @@
 
     <io.github.haoyiwen.uikit.TipView
         android:id="@+id/tip_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="30dp"
         android:visibility="gone"
         app:tipBackgroundColor="@color/color_D5E8F6"
         app:tipText="@string/net_unavailable"
         app:tipTextColor="@color/color_4592C6"
-        app:tipTextSize="14sp" />
+        app:tipTextSize="14sp"
+        />
 
     <io.github.haoyiwen.uikit.refreshlayout.BGARefreshLayout
         android:id="@+id/refresh_layout"

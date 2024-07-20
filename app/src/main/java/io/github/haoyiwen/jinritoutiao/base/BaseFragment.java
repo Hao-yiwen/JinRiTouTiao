@@ -14,8 +14,11 @@ import androidx.viewbinding.ViewBinding;
 import com.github.nukc.stateview.StateView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import io.github.haoyiwen.jinritoutiao.R;
+import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshEvent;
 
 public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBinding> extends LazyLoadFragment {
     protected T mPresenter;

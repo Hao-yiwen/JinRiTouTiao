@@ -24,7 +24,7 @@ public interface ApiService {
      * @return
      */
     @GET(GET_ARTICLE_LIST)
-    Observable<NewsResponse> getNewsList(@Query("category") String categroy, @Query("min_behot_time") long lastTime, @Query("last_refresh_sub_entrance_interval") long currentTime);
+    Observable<NewsResponse> getNewsList(@Query("category") String category, @Query("min_behot_time") long lastTime, @Query("last_refresh_sub_entrance_interval") long currentTime);
 
 
     /**

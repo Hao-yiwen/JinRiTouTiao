@@ -21,28 +21,31 @@ import androidx.annotation.Nullable;
 import io.github.haoyiwen.uikit.utils.UIUtils;
 
 public class TipView extends LinearLayout {
+
     private Context mContext;
+
     private int mBackGroundColor;
     private int mTextColor;
     private String mText;
     private int mTextSize;
     private TextView mTvTip;
 
-    //显示所有停留的事件
+    //显示所停留的时间
     private int mStayTime = 2000;
     private boolean isShowing;
     private Handler mHandler = new Handler();
 
     public TipView(Context context) {
-        this(context, null);
+        this(context,null);
     }
 
     public TipView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs,0);
     }
 
     public TipView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         mContext = context;
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TipView);
@@ -57,7 +60,7 @@ public class TipView extends LinearLayout {
 
     private void init() {
         setGravity(Gravity.CENTER);
-        setBackgroundColor(mBackGroundColor);
+        setBackgroundColor(mBackGroundColor);//设置背景色
 
         mTvTip = new TextView(mContext);
         mTvTip.setGravity(Gravity.CENTER);
@@ -68,17 +71,17 @@ public class TipView extends LinearLayout {
         addView(mTvTip);
     }
 
-    public void show(String content) {
-        if (TextUtils.isEmpty(content)) {
+    public void show(String content){
+        if (TextUtils.isEmpty(content)){
             show();
             return;
         }
-        mTvTip.setText(content);
+        mTvTip.setText(content);//设置内容
         show();
     }
 
-    public void show() {
-        if (isShowing) {
+    public void show(){
+        if (isShowing){
             return;
         }
 
@@ -90,43 +93,47 @@ public class TipView extends LinearLayout {
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(mTvTip, "scaleX", 0, 1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(mTvTip, "scaleY", 0, 1f);
 
-        animatorSet.setDuration(5000);
+        animatorSet.setDuration(500);
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();
 
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(@NonNull Animator animation) {
+            public void onAnimationStart(Animator animation) {
 
             }
 
             @Override
-            public void onAnimationEnd(@NonNull Animator animation) {
+            public void onAnimationEnd(Animator animation) {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         hide();
                     }
-                }, mStayTime);
+                },mStayTime);
             }
 
             @Override
-            public void onAnimationCancel(@NonNull Animator animation) {
+            public void onAnimationCancel(Animator animation) {
+
             }
 
             @Override
-            public void onAnimationRepeat(@NonNull Animator animation) {
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
     }
 
+    /**隐藏，收起*/
     private void hide() {
-        TranslateAnimation hideAnime = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+        TranslateAnimation  hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF
+                ,0.0f,Animation.RELATIVE_TO_SELF,-1.0f);
 
-        hideAnime.setDuration(3000);
-        startAnimation(hideAnime);
-
-        hideAnime.setAnimationListener(new Animation.AnimationListener() {
+        hideAnim.setDuration(300);
+        startAnimation(hideAnim);
+        hideAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -136,7 +143,7 @@ public class TipView extends LinearLayout {
             public void onAnimationEnd(Animation animation) {
                 setVisibility(GONE);
                 isShowing = false;
-                mTvTip.setText(mText);
+                mTvTip.setText(mText); //重新设置回原来的内容
             }
 
             @Override

@@ -1,16 +1,24 @@
 package io.github.haoyiwen.jinritoutiao.ui.fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +30,15 @@ import io.github.haoyiwen.jinritoutiao.constants.Constant;
 import io.github.haoyiwen.jinritoutiao.databinding.FragmentNewsListBinding;
 import io.github.haoyiwen.jinritoutiao.model.entity.NewRecord;
 import io.github.haoyiwen.jinritoutiao.model.entity.News;
+import io.github.haoyiwen.jinritoutiao.model.event.DetailCloseEvent;
+import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshCompletedEvent;
+import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshEvent;
 import io.github.haoyiwen.jinritoutiao.presenter.NewListPresenter;
 import io.github.haoyiwen.jinritoutiao.presenter.view.INewsListView;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.NewsListAdapter;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.VideoListAdapter;
+import io.github.haoyiwen.jinritoutiao.utils.ListUitis;
+import io.github.haoyiwen.jinritoutiao.utils.NetWorkUtils;
 import io.github.haoyiwen.jinritoutiao.utils.NewsRecordHelper;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 import io.github.haoyiwen.uikit.TipView;
@@ -119,7 +132,7 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
 
     @Override
     public void initListener() {
-        if(isVideoList){
+        if (isVideoList) {
             mNewsAdapter = new VideoListAdapter(mNewsList);
         } else {
             mNewsAdapter = new NewsListAdapter(mChnnelCode, mNewsList);
@@ -135,6 +148,20 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
 
         mNewsAdapter.setEnableLoadMore(true);
         mNewsAdapter.setOnLoadMoreListener(this, mRvNews);
+
+        if (isVideoList) {
+            mRvNews.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+                @Override
+                public void onChildViewAttachedToWindow(@NonNull View view) {
+
+                }
+
+                @Override
+                public void onChildViewDetachedFromWindow(@NonNull View view) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -143,7 +170,7 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
 
         mNewRecord = NewsRecordHelper.getLastNewsRecord(mChnnelCode);
 
-        if(mNewRecord == null){
+        if (mNewRecord == null) {
             mNewRecord = new NewRecord();
             mPresenter.getNewsList(mChnnelCode);
             return;
@@ -154,7 +181,7 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
         mNewsAdapter.notifyDataSetChanged();
 
         mStateView.showContent();
-        if(mNewRecord.getTime() - System.currentTimeMillis() == 10 * 60 * 100){
+        if (mNewRecord.getTime() - System.currentTimeMillis() == 10 * 60 * 100) {
             mRefreshLayout.beginRefreshing();
         }
     }
@@ -162,34 +189,150 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
     @Override
     public void onGetNewsListSuccess(List<News> newsList, String tipInfo) {
         mRefreshLayout.endRefreshing();
-        if(isHomeTabRefresh){
+        if (isHomeTabRefresh) {
             postRefreshCompletedEvent();
         }
 
+        // 如果是第一次数据
+        if (ListUitis.isEmpty(mNewsList)) {
+            if (ListUitis.isEmpty(newsList)) {
+                mStateView.showEmpty();
+                return;
+            }
+            mStateView.showContent();
+        }
 
+        if (ListUitis.isEmpty(newsList)) {
+            UIUtils.showToast(UIUtils.getString(R.string.no_news_now));
+            return;
+        }
+
+        if (TextUtils.isEmpty(newsList.get(0).title)) {
+            newsList.remove(0);
+        }
+
+        dealRepeat(newsList);
+
+        mNewsList.addAll(0, newsList);
+
+        mNewsAdapter.notifyDataSetChanged();
+
+        mTipView.show(tipInfo);
+        NewsRecordHelper.save(mChnnelCode, mGson.toJson(newsList));
+    }
+
+    private void dealRepeat(List<News> newsList) {
+        if (isRecommendChannel && mNewsList.size() > 0) {
+            mNewsList.remove(0);
+            if (newsList.size() > 4) {
+                News fourthNews = newsList.get(3);
+                if (fourthNews.tag != null && fourthNews.tag.equals(Constant.ARTICLE_GENRE_AD)) {
+                    newsList.remove(fourthNews);
+                }
+            }
+        }
     }
 
     private void postRefreshCompletedEvent() {
-
+        if (isClickTabRefreshing) {
+            EventBus.getDefault().post(new TabRefreshCompletedEvent());
+            isClickTabRefreshing = false;
+        }
     }
 
     @Override
     public void onError() {
+        mTipView.show();
 
+        if (ListUitis.isEmpty(mNewsList)) {
+            mStateView.showRetry();
+        }
+
+        if (mRefreshLayout.getCurrentRefreshStatus() == BGARefreshLayout.RefreshStatus.REFRESHING) {
+            mRefreshLayout.endRefreshing();
+        }
+        postRefreshCompletedEvent();
     }
 
     @Override
     public void onLoadMoreRequested() {
+        if (mNewRecord.getPage() == 0 || mNewRecord.getPage() == 1) {
+            mNewsAdapter.loadMoreEnd();
+            return;
+        }
 
+        NewRecord preNewsRecord = NewsRecordHelper.getPreNewsRecord(mChnnelCode, mNewRecord.getPage());
+        if (preNewsRecord == null) {
+            mNewsAdapter.loadMoreEnd();
+            return;
+        }
+
+        mNewRecord = preNewsRecord;
+
+        long startTime = System.currentTimeMillis();
+        List<News> newsList = NewsRecordHelper.convertToNewsList(mNewRecord.getJson());
+
+        if (isRecommendChannel) {
+            newsList.remove(0);
+        }
+
+        Logger.e(newsList.toString());
+
+        long endTime = System.currentTimeMillis();
+        if (endTime - startTime <= 1000) {
+            UIUtils.postTaskDelay(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsAdapter.loadMoreComplete();
+                    mNewsList.addAll(newsList);
+                    mNewsAdapter.notifyDataSetChanged();
+                }
+            }, (int) (1000 - (endTime - startTime)));
+        }
     }
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
-
+        if (!NetWorkUtils.isNetworkAvailable(mActivity)) {
+            mTipView.show();
+            if (mRefreshLayout.getCurrentRefreshStatus() == BGARefreshLayout.RefreshStatus.REFRESHING) {
+                mRefreshLayout.endRefreshing();
+            }
+            return;
+        }
+        mPresenter.getNewsList(mChnnelCode);
     }
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerEventBus(NewsListFragment.this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterEventBus(NewsListFragment.this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Logger.e("onDestory" + mChnnelCode);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(TabRefreshEvent event) {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onDetailCloseEvent(DetailCloseEvent event) {
+
     }
 }

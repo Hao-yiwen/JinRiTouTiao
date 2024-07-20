@@ -7,10 +7,10 @@ import android.net.NetworkInfo;
 public class NetWorkUtils {
 
     public static boolean isNetworkAvailable(Context context) {
-        if (context != null) {
+        if(context !=null){
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = cm.getActiveNetworkInfo();
-            if(info!=null){
+            if(info !=null){
                 return info.isAvailable();
             }
         }

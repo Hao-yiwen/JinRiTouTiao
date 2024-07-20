@@ -20,4 +20,11 @@
         <attr name="dividerMarginLeft" format="dimension" />
         <attr name="dividerMarginRight" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="BorderTextView">
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="cornerRadius" format="dimension"/>
+        <attr name="strokeColor" format="color"/>
+        <attr name="followTextColor" format="boolean"/>
+    </declare-styleable>
 </resources>
