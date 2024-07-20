@@ -70,7 +70,7 @@ public class ApiRetrofit {
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         okhttp3.MediaType mediaType = response.body().contentType();
-        String content = request.body().toString();
+        String content = response.body().string();
         Logger.e("----------Request Start----------------");
         Logger.e("| " + request.toString());
         Logger.json("| Response:" + content);

@@ -18,5 +18,5 @@ public class Constant {
     public static final String ARTICLE_GENRE_AD = "ad";
 
 
-
+    public static final String TAG_MOVIDE = "video_movie";
 }

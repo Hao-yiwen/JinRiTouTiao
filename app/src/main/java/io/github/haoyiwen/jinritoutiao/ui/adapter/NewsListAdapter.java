@@ -1,12 +1,21 @@
 package io.github.haoyiwen.jinritoutiao.ui.adapter;
 
+import android.text.TextUtils;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chaychan.adapter.MultipleItemRvAdapter;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import io.github.haoyiwen.jinritoutiao.model.entity.News;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.provider.news.CenterPicNewsItemProvider;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.provider.news.RightPicNewsItemProvider;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.provider.news.TextNewsItemProvider;
+import io.github.haoyiwen.jinritoutiao.ui.adapter.provider.news.ThreePicNewsItemProvider;
+import io.github.haoyiwen.jinritoutiao.utils.ListUitis;
 
 public class NewsListAdapter extends MultipleItemRvAdapter<News, BaseViewHolder> {
 
@@ -32,11 +41,38 @@ public class NewsListAdapter extends MultipleItemRvAdapter<News, BaseViewHolder>
 
     @Override
     protected int getViewType(News news) {
-        return 0;
+        if (news.has_video) {
+            if (news.video_style == 0) {
+                if (news.middle_image == null || TextUtils.isEmpty(news.middle_image.uri)) {
+                    return TEXT_NEWS;
+                }
+                return RIGHT_PIC_VIDEO_NEWS;
+            } else if (news.video_style == 2) {
+                return CENTER_SINGLE_PIC_NEWS;
+            }
+        } else {
+            if (!news.has_image) {
+                return TEXT_NEWS;
+            } else {
+                if (ListUitis.isEmpty(news.image_list)) {
+                    return RIGHT_PIC_VIDEO_NEWS;
+                }
+
+                if (news.gallary_image_count == 3) {
+                    return THREE_PICS_NEWS;
+                }
+
+                return CENTER_SINGLE_PIC_NEWS;
+            }
+        }
+        return TEXT_NEWS;
     }
 
     @Override
     public void registerItemProvider() {
-
+        mProviderDelegate.registerProvider(new TextNewsItemProvider(mChannelCode));
+        mProviderDelegate.registerProvider(new CenterPicNewsItemProvider(mChannelCode));
+        mProviderDelegate.registerProvider(new RightPicNewsItemProvider(mChannelCode));
+        mProviderDelegate.registerProvider(new ThreePicNewsItemProvider(mChannelCode));
     }
 }

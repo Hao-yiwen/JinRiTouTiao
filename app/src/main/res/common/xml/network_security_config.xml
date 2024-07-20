@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">is.snssdk.com</domain>
+        <domain includeSubdomains="true">i.snssdk.com</domain>
+    </domain-config>
+</network-security-config>

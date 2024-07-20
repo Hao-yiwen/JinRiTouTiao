@@ -5,10 +5,14 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
+
+import java.security.PublicKey;
 
 import io.github.haoyiwen.jinritoutiao.app.TouTiaoApp;
 
 public class UIUtils {
+    public static Toast mToast;
 
     public static int getColor(int colorId) {
         return getResource().getColor(colorId, null);
@@ -50,5 +54,17 @@ public class UIUtils {
 
     public static String[] getStringArr(int channelCode) {
         return getResource().getStringArray(channelCode);
+    }
+
+    public static void showToast(String toast) {
+        showToast(toast, Toast.LENGTH_SHORT);
+    }
+
+    public static void showToast(String toast, int duration) {
+        if (mToast == null) {
+            mToast = Toast.makeText(getContext(), "", duration);
+        }
+        mToast.setText(toast);
+        mToast.show();
     }
 }
