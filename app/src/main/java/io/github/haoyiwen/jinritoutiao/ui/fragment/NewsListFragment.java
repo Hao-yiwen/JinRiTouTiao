@@ -37,6 +37,7 @@ import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshCompletedEvent;
 import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshEvent;
 import io.github.haoyiwen.jinritoutiao.presenter.NewListPresenter;
 import io.github.haoyiwen.jinritoutiao.presenter.view.INewsListView;
+import io.github.haoyiwen.jinritoutiao.ui.activities.NewsDetailActivity;
 import io.github.haoyiwen.jinritoutiao.ui.activities.NewsDetailBaseActivity;
 import io.github.haoyiwen.jinritoutiao.ui.activities.VideoDetailActivity;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.NewsListAdapter;
@@ -161,6 +162,8 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
                         videoUrl = videoDetailInfo.parse_video_url;
                     }
                     intent.putExtra(VideoDetailActivity.VIDEO_URL, videoUrl);
+                } else {
+                    intent = new Intent(mActivity, NewsDetailActivity.class);
                 }
                 intent.putExtra(NewsDetailBaseActivity.CHANNEL_CODE, mChnnelCode);
                 intent.putExtra(NewsDetailBaseActivity.POSITION, position);
