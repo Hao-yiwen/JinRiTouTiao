@@ -34,6 +34,13 @@
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.JinRiTouTiao"></activity>
+
+        <activity
+            android:name=".ui.activities.VideoDetailActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.JinRiTouTiao"></activity>
+
     </application>
 
 </manifest>
