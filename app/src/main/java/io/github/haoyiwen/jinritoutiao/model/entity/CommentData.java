@@ -1,6 +1,5 @@
 package io.github.haoyiwen.jinritoutiao.model.entity;
 
-import org.w3c.dom.Comment;
 
 public class CommentData {
     /**

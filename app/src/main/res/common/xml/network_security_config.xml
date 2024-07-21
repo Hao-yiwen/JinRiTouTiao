@@ -3,5 +3,8 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">is.snssdk.com</domain>
         <domain includeSubdomains="true">i.snssdk.com</domain>
+        <domain includeSubdomains="true">toutiao.iiilab.com</domain>
+        <domain includeSubdomains="true">www.parsevideo.com</domain>
+        <domain includeSubdomains="true">m.toutiao.com</domain>
     </domain-config>
 </network-security-config>

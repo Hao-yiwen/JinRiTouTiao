@@ -1,5 +1,6 @@
 package io.github.haoyiwen.jinritoutiao.ui.fragment;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +31,14 @@ import io.github.haoyiwen.jinritoutiao.constants.Constant;
 import io.github.haoyiwen.jinritoutiao.databinding.FragmentNewsListBinding;
 import io.github.haoyiwen.jinritoutiao.model.entity.NewRecord;
 import io.github.haoyiwen.jinritoutiao.model.entity.News;
+import io.github.haoyiwen.jinritoutiao.model.entity.VideoEntity;
 import io.github.haoyiwen.jinritoutiao.model.event.DetailCloseEvent;
 import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshCompletedEvent;
 import io.github.haoyiwen.jinritoutiao.model.event.TabRefreshEvent;
 import io.github.haoyiwen.jinritoutiao.presenter.NewListPresenter;
 import io.github.haoyiwen.jinritoutiao.presenter.view.INewsListView;
+import io.github.haoyiwen.jinritoutiao.ui.activities.NewsDetailBaseActivity;
+import io.github.haoyiwen.jinritoutiao.ui.activities.VideoDetailActivity;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.NewsListAdapter;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.VideoListAdapter;
 import io.github.haoyiwen.jinritoutiao.utils.ListUitis;
@@ -139,10 +143,33 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
         }
         mRvNews.setAdapter(mNewsAdapter);
 
-        mNewsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mNewsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+            public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+                News news = mNewsList.get(position);
 
+                String itemId = news.item_id;
+                StringBuffer urlSb = new StringBuffer("http://m.toutiao.com/i");
+                urlSb.append(itemId).append("/info/");
+                String url = urlSb.toString();
+                Intent intent = null;
+                if (news.has_video) {
+                    intent = new Intent(mActivity, VideoDetailActivity.class);
+                    VideoEntity videoDetailInfo = news.video_detail_info;
+                    String videoUrl = "";
+                    if (videoDetailInfo != null && !TextUtils.isEmpty(videoDetailInfo.parse_video_url)) {
+                        videoUrl = videoDetailInfo.parse_video_url;
+                    }
+                    intent.putExtra(VideoDetailActivity.VIDEO_URL, videoUrl);
+                }
+                intent.putExtra(NewsDetailBaseActivity.CHANNEL_CODE, mChnnelCode);
+                intent.putExtra(NewsDetailBaseActivity.POSITION, position);
+
+                intent.putExtra(NewsDetailBaseActivity.DETAIL_URL, url);
+                intent.putExtra(NewsDetailBaseActivity.GROUP_ID, news.group_id);
+                intent.putExtra(NewsDetailBaseActivity.ITEM_ID, itemId);
+
+                startActivity(intent);
             }
         });
 
@@ -222,7 +249,7 @@ public class NewsListFragment extends BaseFragment<NewListPresenter, FragmentNew
     }
 
     private void dealRepeat(List<News> newsList) {
-        if (isRecommendChannel && mNewsList.size() > 0) {
+        if (isRecommendChannel && !ListUitis.isEmpty(mNewsList)) {
             mNewsList.remove(0);
             if (newsList.size() > 4) {
                 News fourthNews = newsList.get(3);
