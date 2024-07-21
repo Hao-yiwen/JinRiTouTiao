@@ -88,6 +88,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     // 圆形图片
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    // photoview
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    // GlideImageView
+    // implementation 'com.sunfusheng:GlideImageView:2.1.0'
 
 
     testImplementation libs.junit

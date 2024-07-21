@@ -67,4 +67,8 @@ public class UIUtils {
         mToast.setText(toast);
         mToast.show();
     }
+
+    public static String getPackageName() {
+        return getContext().getPackageName();
+    }
 }
