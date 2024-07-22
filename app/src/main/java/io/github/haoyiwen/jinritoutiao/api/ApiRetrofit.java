@@ -34,7 +34,7 @@ public class ApiRetrofit {
     private ApiService mApiservice;
 
     // 缓存配置
-    private Interceptor mChannelInterceptor = chain -> {
+    private Interceptor mCacheInterceptor = chain -> {
         CacheControl.Builder cacheBuilder = new CacheControl.Builder();
         cacheBuilder.maxAge(0, TimeUnit.SECONDS);
         cacheBuilder.maxStale(365, TimeUnit.DAYS);
@@ -97,6 +97,7 @@ public class ApiRetrofit {
 
         mClient = new OkHttpClient.Builder()
                 .addInterceptor(mHeaderInterceptor)
+                .addInterceptor(mCacheInterceptor)
                 .addInterceptor(mLogInterceptor)
                 .cache(cache)
                 .connectTimeout(20, TimeUnit.SECONDS)

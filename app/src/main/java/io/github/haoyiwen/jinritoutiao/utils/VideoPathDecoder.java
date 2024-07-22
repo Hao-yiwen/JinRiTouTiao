@@ -30,6 +30,7 @@ public abstract class VideoPathDecoder{
 
     public void decodePath(String srcUrl) {
         Logger.e(TAG, "srcUrl:" + srcUrl);
+        // todo 当前已经没法使用了...
         ApiRetrofit.getInstance().getmApiservice().getVideoHtml("https://pv.vlogdownloader.com")
                 .flatMap(new Function<String, Observable<VideoModel>>() {
 
