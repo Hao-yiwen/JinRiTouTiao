@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
-        <me.weyye.library.colortrackview.ColorTrackTabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_channel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,7 +38,7 @@
         android:layout_height="1dp"
         android:background="@color/color_e8e8e8" />
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

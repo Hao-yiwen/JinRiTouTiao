@@ -3,8 +3,10 @@ package io.github.haoyiwen.jinritoutiao.ui.adapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +14,11 @@ import java.util.List;
 import io.github.haoyiwen.jinritoutiao.model.entity.Channel;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.NewsListFragment;
 
-public class ChannelPagerAdapter extends FragmentStatePagerAdapter {
+public class ChannelPagerAdapter extends FragmentStateAdapter {
     private List<NewsListFragment> mFragments;
     private List<Channel> mChannels;
 
-    public ChannelPagerAdapter(List<NewsListFragment> fragmentList, List<Channel> channelList, @NonNull FragmentManager fm) {
+    public ChannelPagerAdapter(List<NewsListFragment> fragmentList, List<Channel> channelList, @NonNull FragmentActivity fm) {
         super(fm);
         mFragments = fragmentList != null ? fragmentList : new ArrayList<>();
         mChannels = channelList != null ? channelList : new ArrayList<>();
@@ -24,18 +26,12 @@ public class ChannelPagerAdapter extends FragmentStatePagerAdapter {
 
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         return mFragments.get(position);
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mFragments.size();
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mChannels.get(position).title;
     }
 }

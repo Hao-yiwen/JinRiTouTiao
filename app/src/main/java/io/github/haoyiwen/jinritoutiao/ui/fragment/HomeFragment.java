@@ -10,7 +10,10 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
@@ -27,15 +30,14 @@ import io.github.haoyiwen.jinritoutiao.listener.OnChannelListener;
 import io.github.haoyiwen.jinritoutiao.model.entity.Channel;
 import io.github.haoyiwen.jinritoutiao.ui.adapter.ChannelPagerAdapter;
 import io.github.haoyiwen.jinritoutiao.utils.PreUtils;
-import me.weyye.library.colortrackview.ColorTrackTabLayout;
 
 public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBinding> implements OnChannelListener {
 
-    ColorTrackTabLayout mTabChnanel;
+    TabLayout mTabChnanel;
 
     ImageView ivAddChannel;
 
-    ViewPager mVpContent;
+    ViewPager2 mVpContent;
 
     private List<Channel> mSelectedChannels = new ArrayList<>();
 
@@ -112,12 +114,11 @@ public class HomeFragment extends BaseFragment<BasePresenter, FragmentHomeBindin
 
     @Override
     public void initListener() {
-        mChannelPagerAdapter = new ChannelPagerAdapter(mChannelFragments, mSelectedChannels, getChildFragmentManager());
+        mChannelPagerAdapter = new ChannelPagerAdapter(mChannelFragments, mSelectedChannels, this.getActivity());
         mVpContent.setAdapter(mChannelPagerAdapter);
         mVpContent.setOffscreenPageLimit(mSelectedChannels.size());
-
-        mTabChnanel.setupWithViewPager(mVpContent);
-        mTabChnanel.setSelectedTabIndicatorHeight(0);
+        mVpContent.setUserInputEnabled(false);
+        new TabLayoutMediator(mTabChnanel, mVpContent, (tab, position) -> tab.setText(mSelectedChannels.get(position).title)).attach();
     }
 
     @Override

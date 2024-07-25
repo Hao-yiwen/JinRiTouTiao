@@ -10,7 +10,10 @@ import android.widget.ImageView;
 
 import androidx.viewbinding.ViewBinding;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -28,11 +31,11 @@ import io.github.haoyiwen.uikit.UIUtils;
 import me.weyye.library.colortrackview.ColorTrackTabLayout;
 
 public class VideoFragment extends BaseFragment<BasePresenter, FragmentVideoBinding> {
-    ColorTrackTabLayout mTabChannel;
+    TabLayout mTabChannel;
 
     ImageView mIvOperation;
 
-    ViewPager mVpContent;
+    ViewPager2 mVpContent;
 
     private List<Channel> mChannelList = new ArrayList<>();
 
@@ -89,12 +92,16 @@ public class VideoFragment extends BaseFragment<BasePresenter, FragmentVideoBind
 
     @Override
     public void initListener() {
-        ChannelPagerAdapter channelPagerAdapter = new ChannelPagerAdapter(mFragmentList, mChannelList, getChildFragmentManager());
+        ChannelPagerAdapter channelPagerAdapter = new ChannelPagerAdapter(mFragmentList, mChannelList, this.getActivity());
         mVpContent.setAdapter(channelPagerAdapter);
         mVpContent.setOffscreenPageLimit(mFragmentList.size());
 
-        mTabChannel.setTabPaddingLeftAndRight(UIUtils.dip2Px(mActivity, 10), UIUtils.dip2Px(mActivity, 10));
-        mTabChannel.setupWithViewPager(mVpContent);
+        new TabLayoutMediator(mTabChannel, mVpContent, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(TabLayout.Tab tab, int position) {
+                tab.setText(mChannelList.get(position).title);
+            }
+        }).attach();
 
         mTabChannel.post(new Runnable() {
             @Override
@@ -103,22 +110,11 @@ public class VideoFragment extends BaseFragment<BasePresenter, FragmentVideoBind
                 slidingTabStrip.setMinimumWidth(slidingTabStrip.getMeasuredWidth() + mIvOperation.getMeasuredWidth());
             }
         });
-        mTabChannel.setSelectedTabIndicatorHeight(0);
 
-        mVpContent.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mVpContent.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Jzvd.releaseAllVideos();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
         });
     }
