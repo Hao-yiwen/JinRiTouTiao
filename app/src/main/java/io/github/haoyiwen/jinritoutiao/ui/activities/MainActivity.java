@@ -1,13 +1,14 @@
 package io.github.haoyiwen.jinritoutiao.ui.activities;
 
-import android.os.Bundle;
-import android.widget.FrameLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,6 @@ import io.github.haoyiwen.jinritoutiao.ui.fragment.MicroFragment;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.MineFragment;
 import io.github.haoyiwen.jinritoutiao.ui.fragment.VideoFragment;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
-import io.github.haoyiwen.uikit.NoScrollViewPager;
-import io.github.haoyiwen.uikit.bottombar.BottomBarLayout;
 import io.github.haoyiwen.uikit.statusbar.Eyes;
 
 public class MainActivity extends BaseActivity {
@@ -33,9 +32,23 @@ public class MainActivity extends BaseActivity {
         return ActivityMainBinding.class;
     }
 
-    NoScrollViewPager mVpContent;
+    private static String[] mTitles = new String[]{
+            "首页",
+            "视频",
+            "微头条",
+            "我的"
+    };
 
-    BottomBarLayout mBottomBarLayout;
+    private static int[] mImages = new int[]{
+            R.mipmap.tab_home_normal,
+            R.mipmap.tab_video_normal,
+            R.mipmap.tab_micro_normal,
+            R.mipmap.tab_me_normal
+    };
+
+    ViewPager2 mVpContent;
+
+    TabLayout mBottomBarLayout;
 
     private List<BaseFragment> mFragments;
 
@@ -77,22 +90,30 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initListener() {
-        mTabAdapter = new MainTabAdapter(mFragments, getSupportFragmentManager());
+        mTabAdapter = new MainTabAdapter(mFragments, this);
         mVpContent.setAdapter(mTabAdapter);
-        mVpContent.setOffscreenPageLimit(mFragments.size());
-        try {
-            mBottomBarLayout.setViewPager(mVpContent);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        mBottomBarLayout.setOnItemSelectedListener((v, i) -> {
-            setStatusBarColor(i);//设置状态栏颜色
+        mVpContent.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
         });
+        mVpContent.setOffscreenPageLimit(mFragments.size());
+        mVpContent.setUserInputEnabled(false);
+
+        new TabLayoutMediator(mBottomBarLayout, mVpContent, (tab, position) -> {
+            tab.setText(mTitles[position]);
+            View tabView = LayoutInflater.from(this).inflate(R.layout.item_bottom_bar, null);
+            TextView tabTitle = tabView.findViewById(R.id.tv_text);
+            ImageView imageView = tabView.findViewById(R.id.iv_icon);
+            tabTitle.setText(mTitles[position]);
+            imageView.setImageResource(mImages[position]);
+            tab.setCustomView(tabView);
+        }).attach();
+
     }
 
     private void setStatusBarColor(int position) {
-        if(position == 3){
+        if (position == 3) {
             Eyes.translucentStatusBar(MainActivity.this, true);
         } else {
             Eyes.setStatusBarColor(MainActivity.this, UIUtils.getColor(mStatusColors[position]));

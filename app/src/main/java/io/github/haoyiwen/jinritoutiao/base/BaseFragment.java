@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 
 import com.github.nukc.stateview.StateView;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +45,18 @@ public abstract class BaseFragment<T extends BasePresenter, VB extends ViewBindi
             rootView = binding.getRoot();
             initBinding();
 
-            mStateView = StateView.inject(getStateViewRoot());
+            Logger.i("onCreateView: " + getClass().getSimpleName());
+            if (rootView != null) {
+
+                View stateViewRoot = getStateViewRoot();
+                if (stateViewRoot.getLayoutParams() == null) {
+                    stateViewRoot.setLayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    ));
+                }
+                mStateView = StateView.inject(stateViewRoot);
+            }
 
             if (mStateView != null) {
                 mStateView.setLoadingResource(io.github.haoyiwen.uikit.R.layout.page_loading);

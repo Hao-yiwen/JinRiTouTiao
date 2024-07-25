@@ -3,8 +3,8 @@
 [原项目](https://github.com/chaychan/TouTiao)
 
 - 改进:mvp 更改为 mvvm 实现
-- 改进:litepal 转为 romm
-- 改进:viewpager 改为 viewpage2
+- 改进:litepal 转为 room
+- 改进:~~viewpager 改为 viewpage2~~
 
 ## toutiao-video-download
 

@@ -16,11 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
@@ -44,7 +51,7 @@ import io.github.haoyiwen.jinritoutiao.utils.FileUtils;
 import io.github.haoyiwen.jinritoutiao.utils.UIUtils;
 import io.github.haoyiwen.uikit.statusbar.Eyes;
 
-public class ImageViewPagerActivity extends BaseActivity<BasePresenter, ActivityImageViewPagerBinding> implements ViewPager.OnPageChangeListener, ViewPager.OnAdapterChangeListener {
+public class ImageViewPagerActivity extends BaseActivity<BasePresenter, ActivityImageViewPagerBinding>  {
 
     public static final String TAG = ImageViewPagerActivity.class.getSimpleName();
 
@@ -52,7 +59,7 @@ public class ImageViewPagerActivity extends BaseActivity<BasePresenter, Activity
 
     public static final String Position = "position";
 
-    ViewPager mVpPics;
+    ViewPager2 mVpPics;
 
     TextView mTvIndicator;
 
@@ -96,8 +103,24 @@ public class ImageViewPagerActivity extends BaseActivity<BasePresenter, Activity
             mFragments.add(imageFragment);
             mDownloadingFlagMap.put(i, false);
 
-            mVpPics.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
-            mVpPics.addOnAdapterChangeListener(this);
+            mVpPics.setAdapter(new MyPageAdapter(this));
+            mVpPics.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    mCurrentPosition = position;
+                    setIndicator(mCurrentPosition);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                    super.onPageScrollStateChanged(state);
+                }
+            });
 
             mVpPics.setCurrentItem(mCurrentPosition);
             setIndicator(mCurrentPosition);
@@ -147,41 +170,20 @@ public class ImageViewPagerActivity extends BaseActivity<BasePresenter, Activity
         return null;
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    class MyPageAdapter extends FragmentStateAdapter {
 
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        mCurrentPosition = position;
-        setIndicator(mCurrentPosition);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onAdapterChanged(@NonNull ViewPager viewPager, @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter) {
-
-    }
-
-    class MyPageAdapter extends FragmentPagerAdapter {
-
-        public MyPageAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+        public MyPageAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
         }
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             return mFragments.get(position);
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mFragments.size();
         }
     }
