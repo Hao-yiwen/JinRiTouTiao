@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.viewbinding.ViewBinding;
 
 import com.orhanobut.logger.Logger;
@@ -63,6 +64,16 @@ public class VideoDetailActivity extends NewsDetailBaseActivity<ActivityVideoDet
     @Override
     public void initListener() {
         super.initListener();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                postVideoEvent(true);
+            }
+        });
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorEventListener = new Jzvd.JZAutoFullscreenListener();
 
@@ -145,9 +156,4 @@ public class VideoDetailActivity extends NewsDetailBaseActivity<ActivityVideoDet
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        postVideoEvent(true);
-    }
 }

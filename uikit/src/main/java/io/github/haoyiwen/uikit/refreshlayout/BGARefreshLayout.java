@@ -1,6 +1,7 @@
 package io.github.haoyiwen.uikit.refreshlayout;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -280,11 +281,13 @@ public class BGARefreshLayout extends LinearLayout {
         }
     }
 
+    @SuppressLint("SoonBlockedPrivateApi")
     private void setAbsListViewOnScrollListener() {
         if (mAbsListView != null) {
             try {
                 // 通过反射获取开发者自定义的滚动监听器，并将其替换成自己的滚动监听器，触发滚动时也要通知开发者自定义的滚动监听器（非侵入式，不让开发者继承特定的控件）
                 // mAbsListView.getClass().getDeclaredField("mOnScrollListener")获取不到mOnScrollListener，必须通过AbsListView.class.getDeclaredField("mOnScrollListener")获取
+                // targetSdk 36 起该隐藏字段会被系统拒绝；失败时走 catch，保留原监听器。
                 Field field = AbsListView.class.getDeclaredField("mOnScrollListener");
                 field.setAccessible(true);
                 // 开发者自定义的滚动监听器

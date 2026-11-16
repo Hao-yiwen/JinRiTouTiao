@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +55,22 @@ public abstract class BaseActivity<T extends BasePresenter, VB extends ViewBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mCurrentActivity instanceof MainActivity) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - mPreTime > 2000) {
+                        mPreTime = currentTime;
+                        Toast.makeText(mCurrentActivity, "再按一次，退出应用", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         if(enableSlideClose()){
             ParallaxBackLayout layout = ParallaxHelper.getParallaxBackLayout(this, true);
@@ -163,20 +180,6 @@ public abstract class BaseActivity<T extends BasePresenter, VB extends ViewBindi
 
     public static Activity getCurrentActivity() {
         return mCurrentActivity;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mCurrentActivity instanceof MainActivity) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - mPreTime > 2000) {
-                mPreTime = currentTime;
-                Toast.makeText(mCurrentActivity, "再按一次，退出应用", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-
-        super.onBackPressed();
     }
 
     public boolean isEventBusRegisted(Object subscribe) {

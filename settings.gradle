@@ -17,9 +17,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
-        maven { url "https://www.jitpack.io" }
+        // JCenter shut down in August 2024. Aliyun's public repo still hosts the
+        // artifacts that were never published to Maven Central.
+        maven { url "https://maven.aliyun.com/repository/public" }
     }
 }
 

@@ -95,13 +95,15 @@ public class PowerfulRecyclerView extends RecyclerView {
 
     private void setLayoutManager() {
         if (!mUseStaggerLayout) {
-            if (mOrientation == LinearLayoutManager.VERTICAL) {
-                mLayoutManager = new GridLayoutManager(context, mNumColumns);
+            if (mOrientation == LinearLayoutManager.HORIZONTAL) {
+                mLayoutManager = new GridLayoutManager(context, mNumColumns, LinearLayoutManager.HORIZONTAL, false);
             } else {
-                mLayoutManager = new GridLayoutManager(context, mNumColumns, mOrientation, false);
+                mLayoutManager = new GridLayoutManager(context, mNumColumns);
             }
+        } else if (mOrientation == LinearLayoutManager.HORIZONTAL) {
+            mLayoutManager = new StaggeredGridLayoutManager(mNumColumns, LinearLayoutManager.HORIZONTAL);
         } else {
-            mLayoutManager = new StaggeredGridLayoutManager(mNumColumns, mOrientation);
+            mLayoutManager = new StaggeredGridLayoutManager(mNumColumns, LinearLayoutManager.VERTICAL);
         }
 
         setLayoutManager(mLayoutManager);
