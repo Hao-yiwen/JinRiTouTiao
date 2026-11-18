@@ -23,8 +23,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     sourceSets {
         //目录结构设置
@@ -58,24 +58,24 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     //retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava3:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation "com.squareup.retrofit2:converter-scalars:2.11.0"
-    //okhhttp
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation "com.squareup.retrofit2:converter-scalars:3.0.0"
+    // OkHttp 4.x matches Retrofit 3.0.0. OkHttp 5 is not compatible with that stack.
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.1'
     //rxjava
-    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation("io.reactivex.rxjava3:rxjava:3.1.12")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
     //eventbus
     implementation("org.greenrobot:eventbus:3.3.1")
     // livedata viewmodel
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.11.0")
     // fastjson
-    implementation 'com.alibaba:fastjson:2.0.51'
+    implementation 'com.alibaba:fastjson:2.0.66'
     // videoplayer
-    implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
+    implementation 'cn.jzvd:jiaozivideoplayer:7.7.2.3300'
     // logger
     implementation 'com.orhanobut:logger:2.2.0'
     // 轻量sqlite

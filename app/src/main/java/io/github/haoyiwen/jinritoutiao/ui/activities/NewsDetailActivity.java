@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +41,15 @@ public class NewsDetailActivity extends NewsDetailBaseActivity<ActivityNewsDetai
     @Override
     public void initListener() {
         super.initListener();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+                postVideoEvent(false);
+            }
+        });
 
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,9 +112,4 @@ public class NewsDetailActivity extends NewsDetailBaseActivity<ActivityNewsDetai
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        postVideoEvent(false);
-    }
 }

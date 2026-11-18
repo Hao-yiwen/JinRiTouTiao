@@ -5,9 +5,9 @@ alias(libs.plugins.android.application) apply false
 }
 
 ext {
-    ext.compile_sdk_version = 34
+    ext.compile_sdk_version = 36
     ext.min_sdk_version = 26
-    ext.target_sdk_version = 34
+    ext.target_sdk_version = 36
     ext.build_version = 1
     ext.display_version = "1.0.0"
 }
